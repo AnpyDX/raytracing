@@ -1,8 +1,8 @@
 # Raytracing
-The **Rust** version of [Ray Tracing in One Weekend](raytracing.github.io).
+The **Rust** version of [Ray Tracing in One Weekend](https://raytracing.github.io).
 
-# Features
+## Features
 - TODO
 
-# License
+## License
 Licensed under the MIT license, check [LICENSE](LICENSE) for details.
