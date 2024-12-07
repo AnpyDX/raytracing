@@ -1,22 +1,21 @@
-pub mod prefabs;
-
 pub mod math;
-pub use math::{ Vec2, Vec3, PI, INF };
+pub use math::{ Vec2, Vec3, Interval };
 
 mod ray;
 use ray::Ray;
 
 pub mod hittable;
-use hittable::{ Hittable, SurfaceInfo };
+use hittable::{ HittingInfo, Hittable };
+
+pub mod material;
+pub use material::{ MatInput, ShadeOutput, Material };
+
+pub mod entity;
+pub use entity::Entity;
 
 pub mod scene;
-pub use scene::Scene;
 
-pub mod screen;
-pub use screen::Screen;
 
-pub mod camera;
-pub use camera::Camera;
-
-pub mod renderer;
-pub use renderer::Renderer;
+pub mod backends;
+pub use backends::renderer::{ RenderTask, NativeRenderer };
+pub use backends::st_driven::STDrivenRenderer;

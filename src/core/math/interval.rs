@@ -1,4 +1,4 @@
-use super::INF;
+use std::f64::INFINITY;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Interval {
@@ -20,7 +20,21 @@ impl Interval {
     pub fn surrounds(&self, value: f64) -> bool {
         value > self.min && value < self.max
     }
-}
 
-pub const EMPTY_INTERVAL: Interval = Interval { min: INF, max: -INF };
-pub const UNIVERSE_INTERVAL: Interval = Interval { min: -INF, max: INF };
+    /// Clamp value in interval.
+    pub fn clamp(&self, value: f64) -> f64 {
+        if value < self.min { return self.min }
+        else if value > self.max { return self.max }
+        else { return value }
+    }
+
+    /// Generate a empty interval.
+    pub fn empty() -> Self {
+        Interval { min: INFINITY, max: -INFINITY }
+    }
+
+    /// Generate a universe interval.
+    pub fn universe() -> Self {
+        Interval { min: -INFINITY, max: INFINITY }
+    }
+}

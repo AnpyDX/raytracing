@@ -1,5 +1,10 @@
-use std::ops::{ Neg, Add, Sub, Mul, Div };
-use std::cmp::PartialEq;
+use core::f64;
+use std::{
+    ops::{ Neg, Add, Sub, Mul, Div },
+    cmp::PartialEq
+};
+use super::Interval;
+use rand::{ self, Rng };
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vec3 {
@@ -16,9 +21,35 @@ impl Vec3 {
         Vec3 { x: scalar, y: scalar, z: scalar }
     }
 
+    /// Generate a random vec3 with each element containing in given interval.
+    pub fn random(interval: Interval) -> Vec3 {
+        let range = interval.min..=interval.max;
+        let mut rng = rand::thread_rng();
+        Vec3 { 
+            x: rng.gen_range(range.clone()),
+            y: rng.gen_range(range.clone()),
+            z: rng.gen_range(range)
+        }
+    }
+
+    /// Generate a random unit vec3.
+    pub fn random_unit() -> Vec3 {
+        loop {
+            let v = Self::random(Interval::new(-1.0, 1.0));
+            if Interval::new(1e-160, 1.0).contains(v.length_square()) {
+                return v.normalized();
+            }
+        }
+    }
+    
+    /// Get length's square of vec3 itself.
+    pub fn length_square(&self) -> f64 {
+        self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
+    }
+
     /// Get length of vec3 itself.
     pub fn length(&self) -> f64 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+        self.length_square().sqrt()
     }
 
     /// Return a normalized vec3 of itself.

@@ -1,9 +1,9 @@
 use super::{ Ray, math::{ Vec3, Interval } };
 
-/// Hitted surface info
-pub struct SurfaceInfo {
-    /// The hitted point on hittable.
-    pub point: Vec3,
+/// Hitting information
+pub struct HittingInfo {
+    /// The hitted position on hittable.
+    pub position: Vec3,
     /// The normal(normalized) of the hitted surface.
     /// 
     /// **NOTE**
@@ -25,6 +25,8 @@ pub struct SurfaceInfo {
 pub trait Hittable {
     /// Caculate whether object is hitted.
     /// 
-    /// - `rmin` and `rmax` are the minimum and maximum step of ray.
-    fn hit(&self, ray: &Ray, step_limit: Interval) -> Option<SurfaceInfo>;
+    /// If ray did not hit the object, return `None`.
+    /// 
+    /// - `step_limit` the interval for ray's step.
+    fn hit(&self, ray: &Ray, step_limit: Interval) -> Option<HittingInfo>;
 }

@@ -1,5 +1,4 @@
-pub mod consts;
-pub use consts::{ PI, INF };
+pub mod utils;
 
 pub mod interval;
 pub use interval::Interval;

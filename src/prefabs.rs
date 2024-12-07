@@ -1,5 +1,3 @@
-// Prefab Shapes
-
 use super::{ 
     Hittable, SurfaceInfo, Ray, 
     math::{ Vec3, Interval } 
