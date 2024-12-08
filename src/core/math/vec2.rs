@@ -1,5 +1,6 @@
 use std::ops::{ Neg, Add, Sub, Mul, Div };
 use std::cmp::PartialEq;
+use rand::{ self, Rng };
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vec2 {
@@ -14,6 +15,15 @@ impl Vec2 {
     /// Create vec2 from scalar.
     pub fn from_scalar(scalar: f64) -> Vec2 {
         Vec2 { x: scalar, y: scalar }
+    }
+
+    /// Generate a random vec2 with each element containing in given interval.
+    pub fn random(min: f64, max: f64) -> Vec2 {
+        let mut rng = rand::thread_rng();
+        Vec2 {
+            x: rng.gen_range(min..=max),
+            y: rng.gen_range(min..=max)
+        }
     }
 
     /// Get the length of vec2 itself.

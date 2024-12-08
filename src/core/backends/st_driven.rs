@@ -1,7 +1,7 @@
-use std::f64::INFINITY;
+use std::{ rc::Rc, f64::INFINITY };
 use super::super::{ 
-    Ray, Vec3, Interval,
-    Entity, Material, MatInput, HittingInfo
+    Ray, Vec3, Vec2, Interval,
+    Scene, Material, MatInput, HittingInfo
 };
 use super::renderer::{ NativeRenderer, RenderTask };
 
@@ -9,9 +9,7 @@ pub struct STDrivenRendererConfig {
     /// The size of framebuffer, which generally is the number of pixel.
     pub fb_size: usize,
     /// The maximum number of ray bounce depth.
-    pub max_depth: u32,
-    /// The number of sample-times per pixel.
-    pub spp: u32
+    pub max_depth: u32
 }
 
 /// Single-thread CPU Renderer.
@@ -28,29 +26,28 @@ impl STDrivenRenderer {
         }
     }
 
-    fn hit_scene(ray: &Ray, scene: &Vec<Entity>, step_limit: Interval) -> Option<(HittingInfo, Box<dyn Material>)> {
-        let min_step = INFINITY;
-        let has_hitted = false;
-        let current_mat;
-        let current_hit;
+    fn hit_scene(ray: &Ray, scene: &Scene, step_limit: Interval) -> Option<(HittingInfo, Rc<dyn Material>)> {
+        let mut min_step = INFINITY;
+        let mut current_hit = None;
+        let mut current_mat = None;
 
-        for i in 0..scene.len() {
-            if let Some(hit) = scene[i].mesh.hit(ray, step_limit) {
-                has_hitted = true;
+        for i in 0..scene.entities.len() {
+            if let Some(hit) = scene.entities[i].mesh.hit(ray, step_limit) {
                 if min_step > hit.step {
                     min_step = hit.step;
-                    current_mat = Box::clone(scene[i].mat);
-                    current_hit = hit;
+                    current_hit = Some(hit);
+                    current_mat = Some(Rc::clone(&scene.entities[i].mat));
                 }
             }
         }
 
-        if !has_hitted { return None; }
-
-        Some((current_hit, current_mat))
+        if let Some(hit_info) = current_hit {
+            return Some((hit_info, current_mat.unwrap()));
+        }
+        else { return None; }
     }
 
-    fn ray_color(ray: Ray, depth: u32, scene: &Vec<Entity>, bg: Vec3) -> Vec3 {
+    fn ray_color(ray: Ray, depth: u32, scene: &Scene) -> Vec3 {
         /*
          * There are three situations that `ray_color` will return:
          * 1. if ray hit a light(emissive material), return light color.
@@ -67,24 +64,31 @@ impl STDrivenRenderer {
         let step_limit = Interval::new(0.001, INFINITY);
 
         let Some((rec, mat)) = Self::hit_scene(&ray, scene, step_limit)
-        else { return bg; };
+        else {
+            let bg_input = MatInput {
+                incident_ray: ray,
+                // the next three arguments are uesless.
+                surface_norm: Vec3::from_scalar(0.0),
+                surface_front: true,
+                hitted_position: Vec3::from_scalar(0.0)
+            };
+            return scene.background.emissive(bg_input);
+        };
 
         let mat_input = MatInput {
+            incident_ray: ray,
             surface_norm: rec.normal,
             surface_front: rec.is_front,
             hitted_position: rec.position
         };
-
         
         let emissive_color = mat.emissive(mat_input);
 
-        let scatter_color;
-        if let Some(shade_output) = mat.shade(mat_input) {
-            scatter_color = shade_output.attenuation * Self::ray_color(shade_output.scatter, depth - 1, scene, bg);
-        }
-        else {
+        let Some(shade_output) = mat.shade(mat_input) else {
             return emissive_color;
-        }
+        };
+
+        let scatter_color = shade_output.attenuation * Self::ray_color(shade_output.scatter, depth - 1, scene);
 
         return emissive_color + scatter_color;
     }
@@ -92,7 +96,13 @@ impl STDrivenRenderer {
 
 impl NativeRenderer for STDrivenRenderer {
     fn submit(&mut self, task: RenderTask) {
+        if task.rays.is_empty() { return; }
+
+        let sample_scalar = 1.0 / task.rays.len() as f64;
         
+        for ray in task.rays {
+            self.framebuffer[task.index] += sample_scalar * Self::ray_color(ray, self.config.max_depth, task.scene);
+        }
     }
 
     fn fetch(&self) -> Vec<Vec3> {

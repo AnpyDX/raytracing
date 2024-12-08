@@ -1,6 +1,6 @@
 use core::f64;
 use std::{
-    ops::{ Neg, Add, Sub, Mul, Div },
+    ops::{ Neg, Add, Sub, Mul, Div, AddAssign, SubAssign },
     cmp::PartialEq
 };
 use super::Interval;
@@ -22,20 +22,19 @@ impl Vec3 {
     }
 
     /// Generate a random vec3 with each element containing in given interval.
-    pub fn random(interval: Interval) -> Vec3 {
-        let range = interval.min..=interval.max;
+    pub fn random(min: f64, max: f64) -> Vec3 {
         let mut rng = rand::thread_rng();
         Vec3 { 
-            x: rng.gen_range(range.clone()),
-            y: rng.gen_range(range.clone()),
-            z: rng.gen_range(range)
+            x: rng.gen_range(min..=max),
+            y: rng.gen_range(min..=max),
+            z: rng.gen_range(min..=max)
         }
     }
 
     /// Generate a random unit vec3.
     pub fn random_unit() -> Vec3 {
         loop {
-            let v = Self::random(Interval::new(-1.0, 1.0));
+            let v = Self::random(-1.0, 1.0);
             if Interval::new(1e-160, 1.0).contains(v.length_square()) {
                 return v.normalized();
             }
@@ -207,6 +206,18 @@ impl Div<Vec3> for f64 {
     }
 }
 
+impl AddAssign for Vec3 {
+    fn add_assign(&mut self, rhs: Self) {
+        *self = *self + rhs;
+    }
+}
+
+impl SubAssign for Vec3 {
+    fn sub_assign(&mut self, rhs: Self) {
+        *self = *self - rhs;
+    }
+}
+
 #[cfg(test)]
 mod vec3_tests {
     use super::Vec3;
@@ -278,6 +289,18 @@ mod vec3_tests {
 
         assert_eq!(v1 / 2.0, Vec3::new(1.0, 2.0, 3.0));
         assert_eq!(12.0 / v1, Vec3::new(6.0, 3.0, 2.0));
+    }
+
+    #[test]
+    fn assign_op() {
+        let mut v1 = Vec3::new(1.0, 2.0, 3.0);
+        let mut v2 = Vec3::new(0.0, -1.0, 5.0);
+
+        v1 += Vec3::from_scalar(1.0);
+        v2 -= Vec3::from_scalar(1.0);
+
+        assert_eq!(v1, Vec3::new(2.0, 3.0, 4.0));
+        assert_eq!(v2, Vec3::new(-1.0, -2.0, 4.0));
     }
 
     #[test]

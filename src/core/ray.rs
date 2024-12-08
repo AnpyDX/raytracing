@@ -1,7 +1,7 @@
 use super::math::Vec3;
 
 /// Abstraction of a physical ray.
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct Ray {
     pub ori: Vec3,
     pub dir: Vec3

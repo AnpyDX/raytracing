@@ -1,14 +1,12 @@
-use std::sync::Arc;
-use super::super::{ Ray, Entity, Vec3 };
+use std::rc::Rc;
+use super::super::{ Scene, Ray, Vec3 };
 
 /// Renderer's Render Task
-pub struct RenderTask {
-    /// The ray that is going to send into the scene.
-    pub ray: Ray,
+pub struct RenderTask<'a> {
+    /// The ray set, in which rays' tracing results are sampled into the same pixel.
+    pub rays: Vec<Ray>,
     /// Rendering scene's ref.
-    pub scene: Arc<Vec<Entity>>,
-    /// The background color.
-    pub background: Vec3,
+    pub scene: &'a Scene,
     /// The buffer's index where the rendering result will be put.
     pub index: usize
 }

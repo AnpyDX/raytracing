@@ -3,6 +3,8 @@ use super::{ Vec3, Ray };
 /// Material's input data-type.
 #[derive(Clone, Copy)]
 pub struct MatInput {
+    /// Incident ray.
+    pub incident_ray: Ray,
     /// The normal vector of **outside** surface.
     pub surface_norm: Vec3,
     /// Whether the ray hits from the outside surface.
@@ -29,10 +31,12 @@ pub trait Material {
     }
 
     /// Shading the surface information.
-    fn shade(&self, input: MatInput) -> Option<ShadeOutput> ;
+    fn shade(&self, _input: MatInput) -> Option<ShadeOutput> {
+        None
+    }
 }
 
-/// Lambertian Material
+/// Lambertian Material.
 pub struct Lambertian {
     pub albedo: Vec3
 }
@@ -61,7 +65,7 @@ impl Material for Lambertian {
     }
 }
 
-/// Emissive Material
+/// Emissive Material.
 pub struct Emissive {
     pub emissive: Vec3
 }

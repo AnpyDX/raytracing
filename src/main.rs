@@ -1,50 +1,59 @@
+use std::rc::Rc;
+use raytracing::utils::png;
 use raytracing::{
-    core::*, utils::png
+    Camera, Scene,
+    Renderer, RendererConfig, BackendConfig, DebugLevel,
+    Entity, Sphere,
+    Material, MatInput, Lambertian, 
+    Vec3, Vec2, radians
 };
 
-fn copy_buffer(image: &mut png::Image, screen: &Screen) {
-    for y in 0..image.size.1 {
-        for x in 0..image.size.0 {
-            let index = (y * image.size.0 + x) as usize;
-            let color = screen.buffer[index];
-            let color = (
-                (256.0 * color.x) as u8, 
-                (256.0 * color.y) as u8, 
-                (256.0 * color.z) as u8);
-            image.write((x, y), color);
-        }
+struct Background;
+
+impl Material for Background {
+    fn emissive(&self, input: MatInput) -> Vec3 {
+        let unit_dir = input.incident_ray.dir.normalized();
+        let a = 0.5 * (unit_dir.y + 1.0);
+        return (1.0 - a) * Vec3::from_scalar(1.0) + a * Vec3::new(0.5, 0.7, 1.0);
+    }
+}
+
+fn copy_buffer(src: &Vec<Vec3>, dst: &mut png::Image) {
+    for pixel in src {
+        dst.write()
     }
 }
 
 fn main() {
-    let mut output_image = png::Image::new(1920, 1080);
-
-    let screen = Screen::new(1920, 1080);
-    let mut camera = Camera::new(
-        Vec3::from_scalar(0.0), 
-        Vec3::new(0.0, 0.0, -1.0), 
-        1.0
+    let camera = Camera::new(
+        Vec3::from_scalar(0.0),
+        Vec3::new(0.0, 0.0, 1.0),
+        Vec2::new(1.0, 1.0),
+        radians(45.0)
     );
 
-    camera.set_screen(screen, 3.0);
-
-    let mut scene = Scene::new();
-    scene.add(Box::new(prefabs::Sphere::new(
-        Vec3::new(0.0, 0.0, -1.0),
-        0.5,
-        Vec3::from_scalar(1.0)
-    )));
-    scene.add(Box::new(prefabs::Sphere::new(
-        Vec3::new(0.0, -100.5, -1.0),
-        100.0,
-        Vec3::from_scalar(1.0)
-    )));
-
-    Renderer::render(&scene, &mut camera);
+    let diffuse_mat: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(1.0, 1.0, 1.0)));
+    let bg_mat = Rc::new(Background);
     
-    let screen = camera.take_screen().unwrap();
+    let mut scene = Scene::new(bg_mat);
+    scene.add(Entity { 
+        mesh: Rc::new(
+            Sphere {
+                center: Vec3::new(0.0, 0.0, 1.0),
+                radius: 0.5   
+            }),
+        mat: diffuse_mat
+     });
 
-    copy_buffer(&mut output_image, &screen);
+    let render_config = RendererConfig {
+        backend: BackendConfig::CPUDrivenS,
+        dbg_level: DebugLevel::Full,
+        max_depth: 64,
+        spp: 64
+    };
+    let mut renderer = Renderer::new(render_config);
 
-    output_image.save_as("output.png").unwrap();
+    let output = renderer.render(&scene, &camera, (500, 500));
+
+
 }

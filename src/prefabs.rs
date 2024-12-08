@@ -1,22 +1,20 @@
-use super::{ 
-    Hittable, SurfaceInfo, Ray, 
-    math::{ Vec3, Interval } 
+use super::core::{
+    Hittable, HittingInfo, Ray, Vec3, Interval
 };
 
 pub struct Sphere {
     pub center: Vec3,
-    pub radius: f64,
-    pub color: Vec3
+    pub radius: f64
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f64, color: Vec3) -> Self {
-        Sphere { center, radius, color }
+    pub fn new(center: Vec3, radius: f64) -> Self {
+        Sphere { center, radius }
     }
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray, step_limit: Interval) -> Option<SurfaceInfo> {
+    fn hit(&self, ray: &Ray, step_limit: Interval) -> Option<HittingInfo> {
         let oc = self.center - ray.ori;
         let a = ray.dir.dot(ray.dir);
         let h = ray.dir.dot(oc);
@@ -44,8 +42,9 @@ impl Hittable for Sphere {
             normal = -normal;
         }
 
-        Some(SurfaceInfo {
-            point, normal, step, is_front
+        Some(HittingInfo {
+            position: point, 
+            normal, step, is_front
         })
     }
 }

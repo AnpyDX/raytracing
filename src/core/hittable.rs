@@ -11,9 +11,8 @@ pub struct HittingInfo {
     /// In order to facilite color caculation, 
     /// normal's direction will be inversed if neccearry 
     /// 
-    /// to make it same as Ray's direction.
-    /// 
-    /// That is `normal.dot(ray.dir) > 0.0`.
+    /// to make it **always** same as ray's direction.
+    /// (aka. `normal.dot(ray.dir) > 0.0`)
     pub normal: Vec3,
     /// The step of ray when surface is hitted.
     pub step: f64,
