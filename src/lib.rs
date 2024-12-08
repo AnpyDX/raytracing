@@ -5,7 +5,7 @@ pub use core::{
     Scene, Entity, Hittable,
     Material, MatInput, ShadeOutput, 
     Lambertian, Emissive,
-    Vec3, Vec2, math::utils::radians
+    Interval, Vec3, Vec2, math::utils::radians
 };
 
 pub mod camera;

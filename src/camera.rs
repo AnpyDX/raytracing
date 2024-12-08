@@ -1,4 +1,3 @@
-use rand::{ self, Rng };
 use super::core::{ Ray, Vec3, Vec2 };
 
 /// Camera abstraction

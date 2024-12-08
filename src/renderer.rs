@@ -60,7 +60,7 @@ impl Renderer {
             println!("renderer: {} spp, {} depth", self.config.spp, self.config.max_depth);
         }
 
-        let index = 0;
+        let mut index = 0;
         let fb_size = (screen.0 * screen.1) as f64;
         let renderer = self.backend.as_mut().unwrap();
 
@@ -79,19 +79,21 @@ impl Renderer {
 
             let task = RenderTask { rays, scene, index };
             renderer.submit(task);
+
+            index += 1;
         }
 
         return renderer.fetch();
     }
 
-    fn init_backend(&mut self, fb_size: (u32, u32)) -> String {
+    fn init_backend(&mut self, screen: (u32, u32)) -> String {
         let backend_info;
 
         match self.config.backend {
             BackendConfig::CPUDrivenS => {
                 let renderer = STDrivenRenderer::new(
                     STDrivenRendererConfig {
-                        fb_size: (fb_size.0 * fb_size.1) as usize,
+                        fb_size: (screen.0 * screen.1) as usize,
                         max_depth: self.config.max_depth
                     }
                 );

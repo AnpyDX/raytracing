@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use super::super::{ Scene, Ray, Vec3 };
 
 /// Renderer's Render Task

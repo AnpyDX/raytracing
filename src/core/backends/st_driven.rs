@@ -1,6 +1,6 @@
 use std::{ rc::Rc, f64::INFINITY };
 use super::super::{ 
-    Ray, Vec3, Vec2, Interval,
+    Ray, Vec3, Interval,
     Scene, Material, MatInput, HittingInfo
 };
 use super::renderer::{ NativeRenderer, RenderTask };
@@ -88,7 +88,7 @@ impl STDrivenRenderer {
             return emissive_color;
         };
 
-        let scatter_color = shade_output.attenuation * Self::ray_color(shade_output.scatter, depth - 1, scene);
+        let scatter_color = 0.1 * shade_output.attenuation * Self::ray_color(shade_output.scatter, depth - 1, scene);
 
         return emissive_color + scatter_color;
     }

@@ -5,7 +5,9 @@ use super::{ Vec3, Ray };
 pub struct MatInput {
     /// Incident ray.
     pub incident_ray: Ray,
-    /// The normal vector of **outside** surface.
+    /// The normal vector, whose direction always same as `incident_ray`.
+    /// 
+    /// aka. `dot(incident_ray, surface_norm) > 0`
     pub surface_norm: Vec3,
     /// Whether the ray hits from the outside surface.
     pub surface_front: bool,
