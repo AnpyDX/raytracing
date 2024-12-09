@@ -1,18 +1,19 @@
-pub mod utils;
-
+///! Core preludes.
 pub mod core;
+
+pub use core::math;
+
 pub use core::{
-    Scene, Entity, Hittable,
-    Material, MatInput, ShadeOutput, 
-    Lambertian, Emissive,
-    Interval, Vec3, Vec2, math::utils::radians
+    Camera, 
+    Scene, Entity,
+    Renderer, RendererConfig, BackendConfig, DebugLevel
 };
 
-pub mod camera;
-pub use camera::Camera;
+pub use core::{
+    Hittable,
+    Material, MatInput, ShadeOutput,
+    Lambertian, Emissive
+};
 
+///! Prefabs hittables.
 pub mod prefabs;
-pub use prefabs::Sphere;
-
-pub mod renderer;
-pub use renderer::{ BackendConfig, DebugLevel, RendererConfig, Renderer };

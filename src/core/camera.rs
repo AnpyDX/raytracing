@@ -1,4 +1,4 @@
-use super::core::{ Ray, Vec3, Vec2 };
+use super::{ Vec3, Vec2, Ray };
 
 /// Camera abstraction
 #[derive(Clone, Copy)]

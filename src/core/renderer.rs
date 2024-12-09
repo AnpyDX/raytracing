@@ -1,12 +1,7 @@
-use super::{
-    Camera,
-    core::{
-        Scene, Vec3,
-        backends::{ 
-            NativeRenderer, RenderTask, 
-            STDrivenRenderer, STDrivenRendererConfig 
-        }
-    }
+use super::{ Camera, Scene, Vec3 };
+use super::backends::{ 
+    NativeRenderer, RenderTask, 
+    STDrivenRenderer, STDrivenRendererConfig 
 };
 
 pub enum BackendConfig {
@@ -54,10 +49,10 @@ impl Renderer {
 
         if let DebugLevel::Full = self.config.dbg_level {
             println!("Debug informations:");
-            println!("backend: {}", backend_info);
-            println!("entity number: {}", scene.entities.len());
-            println!("resolution: {}x{}", screen.0, screen.1);
-            println!("renderer: {} spp, {} depth", self.config.spp, self.config.max_depth);
+            println!("> backend: {}", backend_info);
+            println!("> entity number: {}", scene.entities.len());
+            println!("> resolution: {}x{}", screen.0, screen.1);
+            println!("> quality: {} spp, {} depth", self.config.spp, self.config.max_depth);
         }
 
         let mut index = 0;
@@ -111,10 +106,10 @@ impl Renderer {
     fn show_progress(percentage: f64) {
         let num_area = format!("{:.0}%", 100.0 * percentage);
         let prog_area = format!(
-                "[{:=>50}]", 
-                String::from(" ").repeat((50.0 * (1.0 - percentage)) as usize)
+                "[{:<50}]", 
+                String::from("=").repeat((50.0 * percentage) as usize) + ">"
             );
 
-        println!("{:>4} {}", num_area, prog_area);
+        print!("{:>4} {}\r", num_area, prog_area);
     }
 }

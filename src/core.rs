@@ -4,12 +4,14 @@ pub use math::{ Vec2, Vec3, Interval };
 mod ray;
 pub use ray::Ray;
 
+mod backends;
+
 pub mod hittable;
-pub use hittable::{ HittingInfo, Hittable };
+pub use hittable::{ Hittable, HittingInfo };
 
 pub mod material;
 pub use material::{ 
-    MatInput, ShadeOutput, Material,
+    Material, MatInput, ShadeOutput,
     Lambertian, Emissive
 };
 
@@ -19,4 +21,8 @@ pub use entity::Entity;
 pub mod scene;
 pub use scene::Scene;
 
-pub mod backends;
+pub mod camera;
+pub use camera::Camera;
+
+pub mod renderer;
+pub use renderer::{ Renderer, RendererConfig, BackendConfig, DebugLevel };

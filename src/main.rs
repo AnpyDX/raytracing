@@ -3,9 +3,9 @@ use image;
 use raytracing::{
     Camera, Scene,
     Renderer, RendererConfig, BackendConfig, DebugLevel,
-    Entity, Sphere,
+    Entity, prefabs::Sphere,
     Material, MatInput, Lambertian, 
-    Vec3, Vec2, Interval, radians
+    math::{ Vec3, Vec2, Interval, utils::radians }
 };
 
 struct Background;
@@ -83,7 +83,7 @@ fn main() {
     };
     let mut renderer = Renderer::new(render_config);
 
-    let output = renderer.render(&scene, &camera, (500, 500));
+    let output = renderer.render(&scene, &camera, (50, 50));
 
-    save_as_png("output.png", 500, 500, &output);
+    save_as_png("output.png", 50, 50, &output);
 }
