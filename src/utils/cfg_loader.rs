@@ -1,16 +1,4 @@
-/*! Parse and reflect config-file(.cfg) into objects.
- * 
- * # Exception Philosophy
- * - `panic` => Fatal error.
- * - `Result` => Left error to the caller, which also means this error can be fixed by other ways.
- *   
- * Whether a excpetion is a fatal error or resumable problem, it actually depends
- * on the application context and developers' determination.
- * 
- * e.g. A applicatoin requires to read a config file to initialize, but failed, then you have two choices right now.
- * - Consider it as a resumable problem, ask user to provide a right path again.
- * - Or consider it as a fatal error, just panic.
-*/
+//! Parse and reflect config-file(.cfg) into objects.
 use crate::{
     prefabs,
     BackendConfig,
