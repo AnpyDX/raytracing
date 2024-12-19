@@ -10,10 +10,7 @@ pub mod hittable;
 pub use hittable::{ Hittable, HittingInfo };
 
 pub mod material;
-pub use material::{ 
-    Material, MatInput, ShadeOutput,
-    Lambertian, Emissive
-};
+pub use material::{ Material, MatInput, ShadeOutput };
 
 pub mod entity;
 pub use entity::Entity;
@@ -25,4 +22,4 @@ pub mod camera;
 pub use camera::Camera;
 
 pub mod renderer;
-pub use renderer::{ Renderer, RendererConfig, BackendConfig, DebugLevel };
+pub use renderer::{ Renderer, RendererConfig, BackendConfig };

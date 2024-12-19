@@ -6,14 +6,16 @@ pub use core::math;
 pub use core::{
     Camera, 
     Scene, Entity,
-    Renderer, RendererConfig, BackendConfig, DebugLevel
+    Renderer, RendererConfig, BackendConfig
 };
 
 pub use core::{
     Hittable,
-    Material, MatInput, ShadeOutput,
-    Lambertian, Emissive
+    Material, MatInput, ShadeOutput
 };
 
-///! Prefabs hittables.
+///! Prefabs shpaes and materials.
 pub mod prefabs;
+
+///! Utilities.
+pub mod utils;
