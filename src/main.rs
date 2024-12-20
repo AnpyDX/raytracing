@@ -22,7 +22,7 @@ fn main() {
 
     print!("Loading configuration from \"{}\" ... ", &args[1]);
     let mut config = cfg_loader::from_file(&args[1]);
-    println!("finished.\n");
+    println!("finished.");
 
     if !config.comments.is_empty() {
         println!("\n{}", &config.comments);
@@ -61,7 +61,7 @@ fn main() {
     println!("Rendering scene...");
     let framebuffer = renderer.render(&scene, &camera, config.target_resolution);
 
-    println!("Copying buffer...");
+    println!("\nCopying buffer...");
     img_saver::save_as(
         &config.target_name, 
         &framebuffer, 

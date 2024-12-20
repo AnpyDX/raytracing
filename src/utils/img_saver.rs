@@ -1,6 +1,6 @@
 //! Save image file from pixels buffer.
+use crate::math::{ Vec3, Interval };
 use std::ptr::slice_from_raw_parts;
-use super::super::core::{ Vec3, Interval };
 use image::{ self, ColorType };
 
 /// Save buffer as image.
@@ -13,7 +13,7 @@ pub fn save_as(
 ) -> Result<(), String> {
     // Do Gamma correction.
     let linear_to_gamma = |comp: f64| -> f64 {
-        if comp < 0.0 { return 0.0 }
+        if comp <= 0.0 { return 0.0 }
         return comp.sqrt();
     };
 

@@ -4,7 +4,7 @@ use crate::{
     BackendConfig,
     Material, Hittable,
     Scene, Entity,
-    core::math::{ Vec3, Vec2 }
+    math::{ Vec3, Vec2 }
 };
 
 use std::{ cell::RefCell, fs, rc::Rc };
