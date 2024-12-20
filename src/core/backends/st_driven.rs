@@ -88,7 +88,7 @@ impl STDrivenRenderer {
             return emissive_color;
         };
 
-        let scatter_color = 0.1 * shade_output.attenuation * Self::ray_color(shade_output.scatter, depth - 1, scene);
+        let scatter_color = shade_output.attenuation * Self::ray_color(shade_output.scatter, depth - 1, scene);
 
         return emissive_color + scatter_color;
     }
